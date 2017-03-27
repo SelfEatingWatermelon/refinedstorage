@@ -52,6 +52,14 @@ public interface INetworkNode {
     boolean canConduct(EnumFacing direction);
 
     /**
+     * @param direction the direction to check for visible network connectivity
+     * @return true if this node should allow a visible network connection from the given direction
+     */
+    default boolean canAcceptConnection(EnumFacing direction) {
+        return canConduct(direction);
+    }
+
+    /**
      * @return the network
      */
     INetworkMaster getNetwork();

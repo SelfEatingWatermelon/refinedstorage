@@ -14,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -74,30 +73,6 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         } else if (getWorld() != null) {
             RSBlocks.CABLE.attemptConnect(getWorld(), pos);
         }
-    }
-
-    public static boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof TileMultipartNode) {
-            for (IMicroblock microblock : ((TileMultipartNode) tile).getMicroblockContainer().getParts()) {
-                if (isBlockingMicroblock(microblock, direction)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
-        if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
-            return false;
-        }
-
-        IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
-
-        return faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow();
     }
 
     @Override

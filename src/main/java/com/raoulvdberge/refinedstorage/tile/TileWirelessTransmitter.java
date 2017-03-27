@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -80,6 +81,11 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
+	public boolean canAcceptConnection(EnumFacing direction) {
+        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
+	}
+
+	@Override
     public boolean hasConnectivityState() {
         return true;
     }

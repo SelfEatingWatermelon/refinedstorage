@@ -155,8 +155,8 @@ public class BlockCable extends BlockCoverable {
             return false;
         }
 
-        // No need to check via getConnectableConditions() if the target block can't conduct back
-        if (facing instanceof INetworkNode && !((INetworkNode) facing).canConduct(direction.getOpposite())) {
+        // No need to proceed if the target block can't accept a connection from our direction
+        if (facing instanceof INetworkNode && !((INetworkNode) facing).canAcceptConnection(direction.getOpposite())) {
             return false;
         }
 
@@ -172,7 +172,7 @@ public class BlockCable extends BlockCoverable {
                     return false;
                 }
 
-                return ((INetworkNode) tile).canConduct(direction);
+                return ((INetworkNode) tile).canAcceptConnection(direction);
             }
 
             return true;

@@ -26,6 +26,11 @@ public class TileRelay extends TileNode {
     }
 
     @Override
+	public boolean canAcceptConnection(EnumFacing direction) {
+        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
+	}
+
+	@Override
     public boolean hasConnectivityState() {
         return true;
     }
