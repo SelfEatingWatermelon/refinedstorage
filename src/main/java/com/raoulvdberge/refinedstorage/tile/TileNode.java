@@ -113,7 +113,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileMultipartNode) {
+        if (tile instanceof INetworkNode && tile instanceof IMicroblockContainerTile) {
             for (IMicroblock microblock : ((IMicroblockContainerTile) tile).getMicroblockContainer().getParts()) {
                 if (isBlockingMicroblock(microblock, direction)) {
                     return true;
