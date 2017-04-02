@@ -160,7 +160,7 @@ public class BlockCable extends BlockCoverable {
             return false;
         }
 
-        boolean isConnectable = API.instance().hasConnectableConditions(facing);
+        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
         if (isConnectable) {
             TileEntity tile = world.getTileEntity(pos);
 
