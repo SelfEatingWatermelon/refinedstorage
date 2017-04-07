@@ -150,29 +150,23 @@ public class BlockCable extends BlockCoverable {
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        // No need to test anything else if the adjacent block has no TileEntity
-        if (facing == null) {
-            return false;
-        }
-
-        // No need to proceed if the target block can't accept a connection from our direction
-        if (facing instanceof INetworkNode && !((INetworkNode) facing).canAcceptConnection(direction.getOpposite())) {
-            return false;
-        }
-
         boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
         if (isConnectable) {
+            // Facing nodes must be able to accept a connection from our direction
+            if (facing instanceof INetworkNode && !((INetworkNode) facing).canAcceptConnection(direction.getOpposite())) {
+                return false;
+            }
+
             TileEntity tile = world.getTileEntity(pos);
 
-            // Special checks for INetworkNodes
+            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
+            if (tile instanceof TileMultipartNode && getPlacementType() != null && ((TileMultipartNode) tile).getFacingTile() == facing) {
+                return false;
+            }
+
+            // We must be able to conduct in the direction of the facing node
             if (tile instanceof INetworkNode) {
-
-                // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-                if (tile instanceof TileMultipartNode && getPlacementType() != null && ((TileMultipartNode) tile).getFacingTile() == facing) {
-                    return false;
-                }
-
-                return ((INetworkNode) tile).canAcceptConnection(direction);
+                return ((INetworkNode) tile).canConduct(direction);
             }
 
             return true;
