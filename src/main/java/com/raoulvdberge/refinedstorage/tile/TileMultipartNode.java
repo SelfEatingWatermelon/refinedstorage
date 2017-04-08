@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import mcmultipart.capabilities.ISlottedCapabilityProvider;
 import mcmultipart.capabilities.MultipartCapabilityHelper;
 import mcmultipart.microblock.IMicroblock;
@@ -80,7 +79,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
     public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof INetworkNode && tile instanceof IMicroblockContainerTile) {
+        if (tile instanceof TileMultipartNode) {
             for (IMicroblock microblock : ((IMicroblockContainerTile) tile).getMicroblockContainer().getParts()) {
                 if (isBlockingMicroblock(microblock, direction)) {
                     return true;
