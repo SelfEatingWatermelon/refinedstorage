@@ -152,17 +152,21 @@ public class BlockCable extends BlockCoverable {
 
         boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
         if (isConnectable) {
+            // Facing nodes must be able to accept a connection from our direction
+            if (facing instanceof INetworkNode && !((INetworkNode) facing).canAcceptConnection(direction.getOpposite())) {
+                return false;
+            }
+
             TileEntity tile = world.getTileEntity(pos);
 
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-            if (tile instanceof TileMultipartNode) {
-                TileMultipartNode multipartNode = (TileMultipartNode) tile;
+            if (tile instanceof TileMultipartNode && getPlacementType() != null && ((TileMultipartNode) tile).getFacingTile() == facing) {
+                return false;
+            }
 
-                if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == facing) {
-                    return false;
-                }
-
-                return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction) && !TileMultipartNode.hasBlockingMicroblock(world, pos.offset(direction), direction.getOpposite());
+            // We must be able to conduct in the direction of the facing node
+            if (tile instanceof INetworkNode) {
+                return ((INetworkNode) tile).canConduct(direction);
             }
 
             return true;

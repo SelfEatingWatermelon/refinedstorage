@@ -49,7 +49,17 @@ public interface INetworkNode {
      * @param direction the direction to do a conduction check
      * @return true if this node can conduct a connection to the given direction, false otherwise
      */
-    boolean canConduct(EnumFacing direction);
+    default boolean canConduct(EnumFacing direction) {
+        return true;
+    }
+
+    /**
+     * @param direction the direction to check for visible network connectivity
+     * @return true if this node should allow a network connection from the given direction
+     */
+    default boolean canAcceptConnection(EnumFacing direction) {
+        return true;
+    }
 
     /**
      * @return the network

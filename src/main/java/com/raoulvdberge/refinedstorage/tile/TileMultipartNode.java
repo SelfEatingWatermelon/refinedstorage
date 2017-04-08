@@ -76,7 +76,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         }
     }
 
-    public static boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+    public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileMultipartNode) {
@@ -90,7 +90,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         return false;
     }
 
-    public static boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
+    public boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
         if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
             return false;
         }
@@ -102,10 +102,15 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
     @Override
     public boolean canConduct(EnumFacing direction) {
-        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
+        return !hasBlockingMicroblock(getWorld(), pos, direction);
     }
 
     @Override
+	public boolean canAcceptConnection(EnumFacing direction) {
+        return !hasBlockingMicroblock(getWorld(), pos, direction);
+	}
+
+	@Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
             return true;
