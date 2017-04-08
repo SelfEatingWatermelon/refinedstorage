@@ -53,11 +53,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         checked.add(start);
         toCheck.add(start);
 
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            BlockPos pos = start.offset(facing);
+        for (EnumFacing direction : EnumFacing.VALUES) {
+            BlockPos pos = start.offset(direction);
+            TileEntity facing = world.getTileEntity(pos);
 
-            checked.add(pos);
-            toCheck.add(pos);
+            if (facing instanceof INetworkNode && ((INetworkNode) facing).canAcceptConnection(direction.getOpposite()) && checked.add(pos)) {
+                toCheck.add(pos);
+            }
         }
 
         BlockPos currentPos;
@@ -117,11 +119,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 }
             }
 
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                if (node.canConduct(facing)) {
-                    BlockPos pos = currentPos.offset(facing);
+            for (EnumFacing direction : EnumFacing.VALUES) {
+                if (node.canConduct(direction)) {
+                    BlockPos pos = currentPos.offset(direction);
+                    TileEntity facing = world.getTileEntity(pos);
 
-                    if (checked.add(pos)) {
+                    if (facing instanceof INetworkNode && ((INetworkNode) facing).canAcceptConnection(direction.getOpposite()) && checked.add(pos)) {
                         toCheck.add(pos);
                     }
                 }

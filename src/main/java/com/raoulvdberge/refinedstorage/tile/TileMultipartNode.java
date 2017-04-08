@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import mcmultipart.capabilities.ISlottedCapabilityProvider;
 import mcmultipart.capabilities.MultipartCapabilityHelper;
 import mcmultipart.microblock.IMicroblock;
@@ -14,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -75,12 +77,41 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         }
     }
 
-    @Override
-    public boolean canConduct(EnumFacing direction) {
-        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
+    public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof INetworkNode && tile instanceof IMicroblockContainerTile) {
+            for (IMicroblock microblock : ((IMicroblockContainerTile) tile).getMicroblockContainer().getParts()) {
+                if (isBlockingMicroblock(microblock, direction)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
+        if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
+            return false;
+        }
+
+        IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
+
+        return faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow();
     }
 
     @Override
+    public boolean canConduct(EnumFacing direction) {
+        return !hasBlockingMicroblock(getWorld(), pos, direction);
+    }
+
+    @Override
+	public boolean canAcceptConnection(EnumFacing direction) {
+        return !hasBlockingMicroblock(getWorld(), pos, direction);
+	}
+
+	@Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
             return true;

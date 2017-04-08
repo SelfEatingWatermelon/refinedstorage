@@ -82,7 +82,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     @Override
 	public boolean canAcceptConnection(EnumFacing direction) {
-        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
+        return direction == EnumFacing.DOWN;
 	}
 
 	@Override

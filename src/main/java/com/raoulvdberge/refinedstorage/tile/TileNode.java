@@ -6,13 +6,10 @@ import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
-import mcmultipart.microblock.IMicroblockContainerTile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
@@ -108,30 +105,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public void onConnectionChange(INetworkMaster network, boolean state) {
         // NO OP
-    }
-
-    public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof INetworkNode && tile instanceof IMicroblockContainerTile) {
-            for (IMicroblock microblock : ((IMicroblockContainerTile) tile).getMicroblockContainer().getParts()) {
-                if (isBlockingMicroblock(microblock, direction)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
-        if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
-            return false;
-        }
-
-        IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
-
-        return faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow();
     }
 
     @Override

@@ -25,11 +25,6 @@ public class TileRelay extends TileNode {
         return canUpdate();
     }
 
-    @Override
-	public boolean canAcceptConnection(EnumFacing direction) {
-        return true;
-	}
-
 	@Override
     public boolean hasConnectivityState() {
         return true;
