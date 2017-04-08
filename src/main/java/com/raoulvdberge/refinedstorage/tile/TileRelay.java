@@ -25,7 +25,7 @@ public class TileRelay extends TileNode {
         return canUpdate();
     }
 
-	@Override
+    @Override
     public boolean hasConnectivityState() {
         return true;
     }

@@ -80,7 +80,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileMultipartNode) {
-            for (IMicroblock microblock : ((IMicroblockContainerTile) tile).getMicroblockContainer().getParts()) {
+            for (IMicroblock microblock : ((TileMultipartNode) tile).getMicroblockContainer().getParts()) {
                 if (isBlockingMicroblock(microblock, direction)) {
                     return true;
                 }
