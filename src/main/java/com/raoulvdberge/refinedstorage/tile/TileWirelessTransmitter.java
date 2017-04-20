@@ -80,6 +80,11 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
+	public boolean canAcceptConnection(EnumFacing direction) {
+	    return direction == EnumFacing.DOWN;
+	}
+
+	@Override
     public boolean hasConnectivityState() {
         return true;
     }

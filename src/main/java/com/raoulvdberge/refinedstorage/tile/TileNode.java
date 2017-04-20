@@ -108,11 +108,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     }
 
     @Override
-    public boolean canConduct(EnumFacing direction) {
-        return true;
-    }
-
-    @Override
     public INetworkMaster getNetwork() {
         return network;
     }
