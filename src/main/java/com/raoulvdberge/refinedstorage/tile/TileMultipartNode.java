@@ -76,7 +76,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         }
     }
 
-    public boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+    public static boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileMultipartNode) {
@@ -90,7 +90,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         return false;
     }
 
-    public boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
+    public static boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
         if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
             return false;
         }
